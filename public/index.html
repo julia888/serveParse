@@ -8,24 +8,62 @@
     <title>Document</title>
 </head>
 <body>
-<input type="button" value="btn" id="btn">
+<input type="button" value="btn All" id="btnAll">
+<input type="button" value="btn SecuritySettings" id="btnSecuritySettings">
+<input type="button" value="btn tradingSessions" id="btnTradingSessions">
+
 <div id="divId"></div>
 
 </body>
 <script>
-    const divId = document.getElementById('btn');
-    divId.addEventListener('click', read);
+    let req = null;
+    let divId = null;
+    window.onload = () => {
+        req = new XMLHttpRequest();
+        divId = document.getElementById('divId');
+        addEventListener();
+    };
 
-    function read() {
-        var req = new XMLHttpRequest();
+    function addEventListener() {
+        const btnAll = document.getElementById('btnAll');
+        const btnSecuritySettings = document.getElementById('btnSecuritySettings');
+        const btnTradingSessions = document.getElementById('btnTradingSessions');
+        btnAll.addEventListener('click', readAll);
+        btnSecuritySettings.addEventListener('click', readSecuritySettings);
+        btnTradingSessions.addEventListener('click', readTradingSessions);
+    }
+
+    function readAll() {
         req.responseType = 'json';
-        req.open('GET', 'http://localhost:8099', true);
-        req.onload  = function() {
-            var jsonResponse = req.response;
-            console.log("jsonResponse: ", jsonResponse)
-        };
+        req.open('GET', 'http://localhost:8099/all', true);
+        req.onreadystatechange = readyState;
         req.send(null);
     }
 
+    function readSecuritySettings() {
+        req.responseType = 'json';
+        req.open('GET', 'http://localhost:8099/securitySettings', true);
+        req.onreadystatechange = readyState;
+        req.send(null);
+    }
+
+    function readTradingSessions() {
+        req.responseType = 'json';
+        req.open('GET', 'http://localhost:8099/tradingSessions', true);
+        req.onreadystatechange = readyState;
+        req.send(null);
+    }
+
+    function readyState() {
+        req.onload = function () {
+            if (req.readyState === 4 && req.status === 200) {
+                var jsonResponse = req.response;
+                console.log("jsonResponse: ", jsonResponse);
+                divId.innerHTML = 'jsonResponse: ' + JSON.stringify(jsonResponse);
+            } else {
+                divId.innerHTML = 'Can\'t read all data';
+            }
+        };
+    }
 </script>
 </html>
