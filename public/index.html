@@ -19,7 +19,6 @@
     let req = null;
     let divId = null;
     window.onload = () => {
-        req = new XMLHttpRequest();
         divId = document.getElementById('divId');
         addEventListener();
     };
@@ -34,6 +33,8 @@
     }
 
     function readAll() {
+        clearAll();
+        req = new XMLHttpRequest();
         req.responseType = 'json';
         req.open('GET', 'http://localhost:8099/all', true);
         req.onreadystatechange = readyState;
@@ -41,6 +42,8 @@
     }
 
     function readSecuritySettings() {
+        clearAll();
+        req = new XMLHttpRequest();
         req.responseType = 'json';
         req.open('GET', 'http://localhost:8099/securitySettings', true);
         req.onreadystatechange = readyState;
@@ -48,6 +51,8 @@
     }
 
     function readTradingSessions() {
+        clearAll();
+        req = new XMLHttpRequest();
         req.responseType = 'json';
         req.open('GET', 'http://localhost:8099/tradingSessions', true);
         req.onreadystatechange = readyState;
@@ -58,12 +63,14 @@
         req.onload = function () {
             if (req.readyState === 4 && req.status === 200) {
                 var jsonResponse = req.response;
-                console.log("jsonResponse: ", jsonResponse);
                 divId.innerHTML = 'jsonResponse: ' + JSON.stringify(jsonResponse);
             } else {
                 divId.innerHTML = 'Can\'t read all data';
             }
         };
+    }
+    function clearAll() {
+        document.getElementById('divId').innerHTML = '';
     }
 </script>
 </html>
